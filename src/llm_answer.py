@@ -1,6 +1,7 @@
 # src/llm_answer.py
 
 import os
+import time
 from dotenv import load_dotenv
 from google import genai
 
@@ -66,9 +67,26 @@ User Question:
 Final Answer:
 """
 
-    response = client.models.generate_content(
-        model=model_name,
-        contents=prompt
-    )
+    max_retries = 3
 
-    return response.text
+    for attempt in range(max_retries):
+        try:
+            response = client.models.generate_content(
+                model=model_name,
+                contents=prompt
+            )
+
+            return response.text
+
+        except Exception as e:
+            error_message = str(e)
+
+            if attempt < max_retries - 1:
+                time.sleep(2)
+                continue
+
+            return (
+                "Gemini API is currently unavailable or overloaded. "
+                "This is usually temporary. Please try again after a few minutes.\n\n"
+                f"Technical details: {error_message}"
+            )

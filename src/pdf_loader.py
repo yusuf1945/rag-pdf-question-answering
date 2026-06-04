@@ -1,5 +1,3 @@
-# src/pdf_loader.py
-
 from pypdf import PdfReader
 
 
@@ -26,6 +24,35 @@ def extract_text_from_pdf(uploaded_file):
             full_text += page_text
 
     return full_text
+
+
+def extract_pages_from_pdf(uploaded_file):
+    """
+    Extract text page-by-page from an uploaded PDF file.
+
+    Parameter:
+        uploaded_file: PDF file uploaded through Streamlit
+
+    Returns:
+        pages_data: List of dictionaries containing page number and text
+    """
+
+    reader = PdfReader(uploaded_file)
+
+    pages_data = []
+
+    for page_number, page in enumerate(reader.pages, start=1):
+        page_text = page.extract_text()
+
+        if page_text is None:
+            page_text = ""
+
+        pages_data.append({
+            "page": page_number,
+            "text": page_text
+        })
+
+    return pages_data
 
 
 def clean_text(text):
