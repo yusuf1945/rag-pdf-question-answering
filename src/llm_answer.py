@@ -9,7 +9,7 @@ from google import genai
 load_dotenv()
 
 api_key = os.getenv("GEMINI_API_KEY")
-model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+model_name = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
 
 client = genai.Client(api_key=api_key)
 
